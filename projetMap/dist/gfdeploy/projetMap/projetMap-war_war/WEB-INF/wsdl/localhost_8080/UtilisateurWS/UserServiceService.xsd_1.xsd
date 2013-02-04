@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://jax/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://jax/">
+
+<xs:element name="ajouterUtilisateur" type="tns:ajouterUtilisateur"/>
+
+<xs:element name="ajouterUtilisateurResponse" type="tns:ajouterUtilisateurResponse"/>
+
+<xs:element name="emailUnique" type="tns:emailUnique"/>
+
+<xs:element name="emailUniqueResponse" type="tns:emailUniqueResponse"/>
+
+<xs:element name="getUtilisateur" type="tns:getUtilisateur"/>
+
+<xs:element name="getUtilisateurResponse" type="tns:getUtilisateurResponse"/>
+
+<xs:element name="utilisateurExiste" type="tns:utilisateurExiste"/>
+
+<xs:element name="utilisateurExisteResponse" type="tns:utilisateurExisteResponse"/>
+
+<xs:complexType name="ajouterUtilisateur">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="mdp" type="xs:string" minOccurs="0"/>
+<xs:element name="nom" type="xs:string" minOccurs="0"/>
+<xs:element name="prenom" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ajouterUtilisateurResponse">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="emailUnique">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="emailUniqueResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="utilisateurExiste">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="mdp" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="utilisateurExisteResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUtilisateur">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="mdp" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getUtilisateurResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:utilisateurPOJO" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="utilisateurPOJO">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="mdp" type="xs:string" minOccurs="0"/>
+<xs:element name="nom" type="xs:string" minOccurs="0"/>
+<xs:element name="prenom" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
