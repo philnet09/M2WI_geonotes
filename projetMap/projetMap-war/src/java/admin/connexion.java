@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceRef;
-import jax.UserServiceService;
-import jax.UtilisateurPOJO;
+import jax.UserWSService; 
 import jpa.Utilisateur;
 
 /**
@@ -25,9 +24,8 @@ import jpa.Utilisateur;
  */
 @WebServlet(name = "connexion", urlPatterns = {"/connexion"})
 public class connexion extends HttpServlet {
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/UtilisateurWS/UserServiceService.wsdl")
-    private UserServiceService service;
-
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/UserWS/UserWSService.wsdl")
+    private UserWSService service;
 
     @EJB
     private UtilisateursLocal user;
@@ -39,7 +37,7 @@ public class connexion extends HttpServlet {
         response.setContentType("application/json");
         EmailValidator ev = new EmailValidator();
         if (ev.validate(request.getParameter("email").trim())) {
-            if (!this.emailUnique(request.getParameter("email").trim())) {
+            if (user.emailUnique(request.getParameter("email").trim())) {
                 response.getWriter().write(json.toJson(1));//email valide et unique
             } else {
                 response.getWriter().write(json.toJson(2));//email valide mais non unique
@@ -62,8 +60,8 @@ public class connexion extends HttpServlet {
             if (email.equals("admin@admin.com") && mdp.equals("admin")) {
                 request.getRequestDispatcher("WEB-INF/administration.jsp").forward(request, response);
             } else {
-                if (this.utilisateurExiste(email, mdp)) {
-                    request.setAttribute("user", this.getUtilisateur(email, mdp));
+                if (user.utilisateurExiste(email, mdp)) {
+                    request.setAttribute("user", user.getUtilisateur(email, mdp));
                     request.getRequestDispatcher("WEB-INF/Utilisation.jsp").forward(request, response);
                 } else {
                     String erreur = "Connexion échoué";
@@ -78,11 +76,9 @@ public class connexion extends HttpServlet {
             String email = request.getParameter("email1").trim();
             String mdp = request.getParameter("mdp1").trim();
             EmailValidator ev = new EmailValidator();
-            if (ev.validate(email) && nom.length() > 1 && prenom.length() > 1 && !this.emailUnique(email) && mdp.length() > 3) {
-                this.ajouterUtilisateur(email,mdp,nom,prenom);
-//                Utilisateur util = new Utilisateur();
-//                jax.UserWS port = service.getUserWSPort();
-//                port.ajouterUtilisateur(nom, prenom, mdp, email);
+            if (ev.validate(email) && nom.length() > 1 && prenom.length() > 1 && user.emailUnique(email) && mdp.length() > 3) {
+               Utilisateur u = new Utilisateur(email, mdp, nom, prenom);
+               user.ajouterUtilisateur(u);
                 request.getRequestDispatcher("WEB-INF/administration.jsp").forward(request, response);
             } else {
                 String erreur = "Inscription échoué";
@@ -91,27 +87,5 @@ public class connexion extends HttpServlet {
             }
         }
     }
-
-    private void ajouterUtilisateur(java.lang.String email, java.lang.String mdp, java.lang.String nom, java.lang.String prenom) {
-        jax.UserService port = service.getUserServicePort();
-        port.ajouterUtilisateur(email, mdp, nom, prenom);
-    }
-
-    private boolean emailUnique(java.lang.String email) {
-        jax.UserService port = service.getUserServicePort();
-        return port.emailUnique(email);
-    }
-
-    private UtilisateurPOJO getUtilisateur(java.lang.String email, java.lang.String mdp) {
-        jax.UserService port = service.getUserServicePort();
-        return port.getUtilisateur(email, mdp);
-    }
-
-    private boolean utilisateurExiste(java.lang.String email, java.lang.String mdp) {
-        jax.UserService port = service.getUserServicePort();
-        return port.utilisateurExiste(email, mdp);
-    }
-
-
 
 }
